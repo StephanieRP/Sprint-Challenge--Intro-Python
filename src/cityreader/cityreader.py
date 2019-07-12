@@ -1,6 +1,7 @@
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
 import csv
+from csv import DictReader
 
 
 class City:  # city class with name, lat and lon
@@ -8,6 +9,9 @@ class City:  # city class with name, lat and lon
         self.name = name
         self.lat = lat
         self.lon = lon
+
+    def __str__(self):
+        return "({}, {}, {})".format(self.name, self.lat, self.lon)
 
 
 # We have a collection of US cities with population over 750,000 stored in the
@@ -30,9 +34,10 @@ def cityreader(cities=[]):
     # For each city record, create a new City instance and add it to the
     # `cities` list
     with open("cities.csv") as csvfile:
-        cityreader = csv.reader(csvfile, delimiter=',')
-    next(cityreader)  # skip header
-    cities = [City(r[0], r[3], r[4]) for r in cityreader]
+        cityreader = csv.DictReader(csvfile, delimiter=',')
+        for c in cityreader:
+            cities.append(City(c['city'], float(c['lat']), float(c['lng'])))
+    return cities
 
 
 # Print the list of cities (name, lat, lon), 1 record per line.
